@@ -1,0 +1,1111 @@
+postgres=# create database employee_management_system;
+CREATE DATABASE
+postgres=# create table employees(employee_id INT PRIMARY KEY, first_name VARCHAR(50), last_name VARCHAR(50), email VARCHAR(100), hire_date DATE, salary DECIMAL(10, 2), department_id INT );
+CREATE TABLE
+postgres=# create table departments(department_id INT PRIMARY KEY, department_name VARCHAR(100) PROJECTS project_id INT PRIMARY KEY, project_name VARCHAR(100), start_date DATE, end_date DATE );
+ERROR:  syntax error at or near "PROJECTS"
+LINE 1: ..._id INT PRIMARY KEY, department_name VARCHAR(100) PROJECTS p...
+                                                             ^
+postgres=# create table departments(department_id INT PRIMARY KEY, department_name VARCHAR(100));
+CREATE TABLE
+postgres=# create table projects(project_id INT PRIMARY KEY, project_name VARCHAR(100), start_date DATE, end_date DATE );
+CREATE TABLE
+postgres=# create table employee_projects(employee_id INT primary key, project_id INT foreign key(project_id) references projects(project_id), assigned_date DATE, PRIMARY KEY);
+ERROR:  syntax error at or near "foreign"
+LINE 1: ...jects(employee_id INT primary key, project_id INT foreign ke...
+                                                             ^
+postgres=# create table employee_projects(employee_id INT primary key, project_id INT,foreign key(project_id) references projects(project_id), assigned_date DATE, PRIMARY KEY);
+ERROR:  syntax error at or near ")"
+LINE 1: ...nces projects(project_id), assigned_date DATE, PRIMARY KEY);
+                                                                     ^
+postgres=# create table employee_projects(employee_id INT primary key, project_id INT,foreign key(project_id) references projects(project_id), assigned_date DATE);
+CREATE TABLE
+postgres=# \d
+               List of relations
+ Schema |       Name        | Type  |  Owner
+--------+-------------------+-------+----------
+ public | departments       | table | postgres
+ public | employee_projects | table | postgres
+ public | employees         | table | postgres
+ public | projects          | table | postgres
+(4 rows)
+
+
+postgres=# \c employee_management_system
+You are now connected to database "employee_management_system" as user "postgres".
+employee_management_system=# \d
+Did not find any relations.
+employee_management_system=# create table employees(employee_id INT PRIMARY KEY, first_name VARCHAR(50), last_name VARCHAR(50), email VARCHAR(100), hire_date DATE, salary DECIMAL(10, 2), department_id INT );
+CREATE TABLE
+employee_management_system=# create table departments(department_id INT PRIMARY KEY, department_name VARCHAR(100));
+CREATE TABLE
+employee_management_system=# create table projects(project_id INT PRIMARY KEY, project_name VARCHAR(100), start_date DATE, end_date DATE );
+CREATE TABLE
+employee_management_system=# create table employee_projects(employee_id INT primary key, project_id INT,foreign key(project_id) references projects(project_id), assigned_date DATE);
+CREATE TABLE
+employee_management_system=# INSERT INTO departments (department_id, department_name) VALUES (1, 'Human Resources'), (2, 'Finance'), (3, 'Information Technology'), (4, 'Marketing'), (5, 'Legal'), (6, 'Operations'), (7, 'Customer Service'), (8, 'Sales'), (9, 'Research and Development'), (10, 'Procurement');
+INSERT 0 10
+employee_management_system=# INSERT INTO employees (employee_id, first_name, last_name, email, hire_date, salary, department_id) VALUES (101, 'Alice', 'Johnson', 'alice.johnson@company.com', '2015-03-15', 4500.00, 1), (102, 'Bob', 'Smith', 'bob.smith@company.com', '2018-06-23', 5200.00, 3), (103, 'Carol', 'Adams', 'carol.adams@company.com', '2012-09-10', 6700.00, 2), (104, 'David', 'Lee', 'david.lee@company.com', '2020-01-05', 3800.00, 4), (105, 'Eve', 'Martins', 'eve.martins@company.com', '2019-12-11', 4000.00, 3), (106, 'Frank', 'Green', 'frank.green@company.com', '2017-07-08', 6000.00, 8), (107, 'Grace', 'Brown', 'grace.brown@company.com', '2014-11-02', 4900.00, 5), (108, 'Hank', 'Wilson', 'hank.wilson@company.com', '2013-02-17', 3100.00, 6), (109, 'Ivy', 'Clark', 'ivy.clark@company.com', '2021-08-30', 2700.00, 9), (110, 'Jake', 'White', 'jake.white@company.com', '2022-05-19', 3600.00, 7);
+INSERT 0 10
+employee_management_system=# INSERT INTO projects (project_id, project_name, start_date, end_date) VALUES (201, 'HR Revamp', '2023-01-01', '2023-12-31'), (202, 'Finance Automation', '2022-05-15', '2023-04-30'), (203, 'IT Infrastructure Upgrade', '2024-01-01', NULL), (204, 'Marketing Blitz 2025', '2025-02-01', '2025-06-30'), (205, 'Legal Compliance', '2023-07-10', '2024-01-10'), (206, 'Customer Portal', '2021-11-01', '2022-10-31'), (207, 'Sales Booster', '2022-04-01', '2023-03-31'), (208, 'R&D Pilot', '2025-01-01', NULL), (209, 'Procurement Tracker', '2024-03-15', '2024-11-15'), (210, 'Operations Streamline', '2022-09-01', '2023-09-01');
+INSERT 0 10
+employee_management_system=# INSERT INTO employee_projects (employee_id, project_id, assigned_date) VALUES (101, 201, '2023-01-10'), (102, 203, '2024-01-05'), (103, 202, '2022-05-20'), (104, 204, '2025-02-10'), (105, 203, '2024-01-07'), (106, 207, '2022-04-15'), (107, 205, '2023-07-15'), (108, 210, '2022-09-10'), (109, 208, '2025-01-10'), (110, 206, '2021-11-05');
+INSERT 0 10
+employee_management_system=# \d
+               List of relations
+ Schema |       Name        | Type  |  Owner
+--------+-------------------+-------+----------
+ public | departments       | table | postgres
+ public | employee_projects | table | postgres
+ public | employees         | table | postgres
+ public | projects          | table | postgres
+(4 rows)
+
+
+employee_management_system=# select concat(first_name,' ',last_name) as full_name from employees;
+   full_name
+---------------
+ Alice Johnson
+ Bob Smith
+ Carol Adams
+ David Lee
+ Eve Martins
+ Frank Green
+ Grace Brown
+ Hank Wilson
+ Ivy Clark
+ Jake White
+(10 rows)
+
+
+employee_management_system=# select lower(first_name), lower(last_name) from employees;
+ lower |  lower
+-------+---------
+ alice | johnson
+ bob   | smith
+ carol | adams
+ david | lee
+ eve   | martins
+ frank | green
+ grace | brown
+ hank  | wilson
+ ivy   | clark
+ jake  | white
+(10 rows)
+
+
+employee_management_system=# select replace(email,'@company.com','@org.com') from employees;
+        replace
+-----------------------
+ alice.johnson@org.com
+ bob.smith@org.com
+ carol.adams@org.com
+ david.lee@org.com
+ eve.martins@org.com
+ frank.green@org.com
+ grace.brown@org.com
+ hank.wilson@org.com
+ ivy.clark@org.com
+ jake.white@org.com
+(10 rows)
+
+
+employee_management_system=# select * from employees;
+ employee_id | first_name | last_name |           email           | hire_date  | salary  | department_id
+-------------+------------+-----------+---------------------------+------------+---------+---------------
+         101 | Alice      | Johnson   | alice.johnson@company.com | 2015-03-15 | 4500.00 |             1
+         102 | Bob        | Smith     | bob.smith@company.com     | 2018-06-23 | 5200.00 |             3
+         103 | Carol      | Adams     | carol.adams@company.com   | 2012-09-10 | 6700.00 |             2
+         104 | David      | Lee       | david.lee@company.com     | 2020-01-05 | 3800.00 |             4
+         105 | Eve        | Martins   | eve.martins@company.com   | 2019-12-11 | 4000.00 |             3
+         106 | Frank      | Green     | frank.green@company.com   | 2017-07-08 | 6000.00 |             8
+         107 | Grace      | Brown     | grace.brown@company.com   | 2014-11-02 | 4900.00 |             5
+         108 | Hank       | Wilson    | hank.wilson@company.com   | 2013-02-17 | 3100.00 |             6
+         109 | Ivy        | Clark     | ivy.clark@company.com     | 2021-08-30 | 2700.00 |             9
+         110 | Jake       | White     | jake.white@company.com    | 2022-05-19 | 3600.00 |             7
+(10 rows)
+
+
+employee_management_system=# \d employees
+                        Table "public.employees"
+    Column     |          Type          | Collation | Nullable | Default
+---------------+------------------------+-----------+----------+---------
+ employee_id   | integer                |           | not null |
+ first_name    | character varying(50)  |           |          |
+ last_name     | character varying(50)  |           |          |
+ email         | character varying(100) |           |          |
+ hire_date     | date                   |           |          |
+ salary        | numeric(10,2)          |           |          |
+ department_id | integer                |           |          |
+Indexes:
+    "employees_pkey" PRIMARY KEY, btree (employee_id)
+
+
+employee_management_system=# alter table employee add foreign key(department_id) references department(department_id);
+ERROR:  relation "employee" does not exist
+employee_management_system=# alter table employees add foreign key(department_id) references department(department_id);
+ERROR:  relation "department" does not exist
+employee_management_system=# alter table employees add foreign key(department_id) references departments(department_id);
+ALTER TABLE
+employee_management_system=# select length(concat(first_name,last_name) as full_name) from employee;
+ERROR:  syntax error at or near "as"
+LINE 1: select length(concat(first_name,last_name) as full_name) fro...
+                                                   ^
+employee_management_system=# select length(concat(first_name,last_name)) as full_name from employee;
+ERROR:  relation "employee" does not exist
+LINE 1: ...th(concat(first_name,last_name)) as full_name from employee;
+                                                              ^
+employee_management_system=# select length(concat(first_name,last_name)) as full_name from employees;
+ full_name
+-----------
+        12
+         8
+        10
+         8
+        10
+        10
+        10
+        10
+         8
+         9
+(10 rows)
+
+
+employee_management_system=# select charindex('@',email);
+ERROR:  column "email" does not exist
+LINE 1: select charindex('@',email);
+                             ^
+employee_management_system=# select charindex('@',email) from employees;
+ERROR:  function charindex(unknown, character varying) does not exist
+LINE 1: select charindex('@',email) from employees;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select instr('@',email) from employees;
+ERROR:  function instr(unknown, character varying) does not exist
+LINE 1: select instr('@',email) from employees;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select instr(email,'@') from employees;
+ERROR:  function instr(character varying, unknown) does not exist
+LINE 1: select instr(email,'@') from employees;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select position('@' in email) from employees;
+ position
+----------
+       14
+       10
+       12
+       10
+       12
+       12
+       12
+       12
+       10
+       11
+(10 rows)
+
+
+employee_management_system=# select * from employees;
+ employee_id | first_name | last_name |           email           | hire_date  | salary  | department_id
+-------------+------------+-----------+---------------------------+------------+---------+---------------
+         101 | Alice      | Johnson   | alice.johnson@company.com | 2015-03-15 | 4500.00 |             1
+         102 | Bob        | Smith     | bob.smith@company.com     | 2018-06-23 | 5200.00 |             3
+         103 | Carol      | Adams     | carol.adams@company.com   | 2012-09-10 | 6700.00 |             2
+         104 | David      | Lee       | david.lee@company.com     | 2020-01-05 | 3800.00 |             4
+         105 | Eve        | Martins   | eve.martins@company.com   | 2019-12-11 | 4000.00 |             3
+         106 | Frank      | Green     | frank.green@company.com   | 2017-07-08 | 6000.00 |             8
+         107 | Grace      | Brown     | grace.brown@company.com   | 2014-11-02 | 4900.00 |             5
+         108 | Hank       | Wilson    | hank.wilson@company.com   | 2013-02-17 | 3100.00 |             6
+         109 | Ivy        | Clark     | ivy.clark@company.com     | 2021-08-30 | 2700.00 |             9
+         110 | Jake       | White     | jake.white@company.com    | 2022-05-19 | 3600.00 |             7
+(10 rows)
+
+
+employee_management_system=# \d projects
+                        Table "public.projects"
+    Column    |          Type          | Collation | Nullable | Default
+--------------+------------------------+-----------+----------+---------
+ project_id   | integer                |           | not null |
+ project_name | character varying(100) |           |          |
+ start_date   | date                   |           |          |
+ end_date     | date                   |           |          |
+Indexes:
+    "projects_pkey" PRIMARY KEY, btree (project_id)
+Referenced by:
+    TABLE "employee_projects" CONSTRAINT "employee_projects_project_id_fkey" FOREIGN KEY (project_id) REFERENCES projects(project_id)
+
+
+employee_management_system=# select upper(project_name) from projects;
+           upper
+---------------------------
+ HR REVAMP
+ FINANCE AUTOMATION
+ IT INFRASTRUCTURE UPGRADE
+ MARKETING BLITZ 2025
+ LEGAL COMPLIANCE
+ CUSTOMER PORTAL
+ SALES BOOSTER
+ R&D PILOT
+ PROCUREMENT TRACKER
+ OPERATIONS STREAMLINE
+(10 rows)
+
+
+employee_management_system=# select * from projects;
+ project_id |       project_name        | start_date |  end_date
+------------+---------------------------+------------+------------
+        201 | HR Revamp                 | 2023-01-01 | 2023-12-31
+        202 | Finance Automation        | 2022-05-15 | 2023-04-30
+        203 | IT Infrastructure Upgrade | 2024-01-01 |
+        204 | Marketing Blitz 2025      | 2025-02-01 | 2025-06-30
+        205 | Legal Compliance          | 2023-07-10 | 2024-01-10
+        206 | Customer Portal           | 2021-11-01 | 2022-10-31
+        207 | Sales Booster             | 2022-04-01 | 2023-03-31
+        208 | R&D Pilot                 | 2025-01-01 |
+        209 | Procurement Tracker       | 2024-03-15 | 2024-11-15
+        210 | Operations Streamline     | 2022-09-01 | 2023-09-01
+(10 rows)
+
+
+employee_management_system=# select concat(e.first_name,e.last_name,substring(p.project name,1,3)) from employee e join employee_project ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+ERROR:  syntax error at or near "name"
+LINE 1: ...ncat(e.first_name,e.last_name,substring(p.project name,1,3))...
+                                                             ^
+employee_management_system=# select concat(e.first_name,e.last_name,substring(p.project_name,1,3)) from employee e join employee_project ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+ERROR:  relation "employee" does not exist
+LINE 1: ...e,e.last_name,substring(p.project_name,1,3)) from employee e...
+                                                             ^
+employee_management_system=# select concat(e.first_name,e.last_name,substring(p.project_name,1,3)) from employees e join employee_project ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+ERROR:  relation "employee_project" does not exist
+LINE 1: ...string(p.project_name,1,3)) from employees e join employee_p...
+                                                             ^
+employee_management_system=# select concat(e.first_name,e.last_name,substring(p.project_name,1,3)) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+     concat
+-----------------
+ AliceJohnsonHR
+ BobSmithIT
+ CarolAdamsFin
+ DavidLeeMar
+ EveMartinsIT
+ FrankGreenSal
+ GraceBrownLeg
+ HankWilsonOpe
+ IvyClarkR&D
+ JakeWhiteCus
+(10 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',e.last_name,' ',(substring(p.project_name,1,3))) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+      concat
+-------------------
+ Alice Johnson HR
+ Bob Smith IT
+ Carol Adams Fin
+ David Lee Mar
+ Eve Martins IT
+ Frank Green Sal
+ Grace Brown Leg
+ Hank Wilson Ope
+ Ivy Clark R&D
+ Jake White Cus
+(10 rows)
+
+
+employee_management_system=# select email, lenght(email) from employees;
+ERROR:  function lenght(character varying) does not exist
+LINE 1: select email, lenght(email) from employees;
+                      ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select email, length(email) from employees;
+           email           | length
+---------------------------+--------
+ alice.johnson@company.com |     25
+ bob.smith@company.com     |     21
+ carol.adams@company.com   |     23
+ david.lee@company.com     |     21
+ eve.martins@company.com   |     23
+ frank.green@company.com   |     23
+ grace.brown@company.com   |     23
+ hank.wilson@company.com   |     23
+ ivy.clark@company.com     |     21
+ jake.white@company.com    |     22
+(10 rows)
+
+
+employee_management_system=# select * from employee_projects;
+ employee_id | project_id | assigned_date
+-------------+------------+---------------
+         101 |        201 | 2023-01-10
+         102 |        203 | 2024-01-05
+         103 |        202 | 2022-05-20
+         104 |        204 | 2025-02-10
+         105 |        203 | 2024-01-07
+         106 |        207 | 2022-04-15
+         107 |        205 | 2023-07-15
+         108 |        210 | 2022-09-10
+         109 |        208 | 2025-01-10
+         110 |        206 | 2021-11-05
+(10 rows)
+
+
+employee_management_system=# select concat(upper(last_name),' ',first_name)) as full_name from employees;
+ERROR:  syntax error at or near ")"
+LINE 1: select concat(upper(last_name),' ',first_name)) as full_name...
+                                                      ^
+employee_management_system=# select concat(upper(last_name),' ',first_name) as full_name from employees;
+   full_name
+---------------
+ JOHNSON Alice
+ SMITH Bob
+ ADAMS Carol
+ LEE David
+ MARTINS Eve
+ GREEN Frank
+ BROWN Grace
+ WILSON Hank
+ CLARK Ivy
+ WHITE Jake
+(10 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,e.last_name 'Active')) from employee e join empployee_projects ep on e.employee_id=ep.employee_id join project p on p.project_id=ep.project_id where p.end_date=now();
+ERROR:  relation "employee" does not exist
+LINE 1: ...last_name,e.last_name,e.last_name 'Active')) from employee e...
+                                                             ^
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,e.last_name 'Active')) from employees e join empployee_projects ep on e.employee_id=ep.employee_id join project p on p.project_id=ep.project_id where p.end_date=now();
+ERROR:  relation "empployee_projects" does not exist
+LINE 1: ...name,e.last_name 'Active')) from employees e join empployee_...
+                                                             ^
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,e.last_name 'Active')) from employees e join employee_projects ep on e.employee_id=ep.employee_id join project p on p.project_id=ep.project_id where p.end_date=now();
+ERROR:  relation "project" does not exist
+LINE 1: ..._projects ep on e.employee_id=ep.employee_id join project p ...
+                                                             ^
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,e.last_name 'Active')) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date=now();
+ERROR:  schema "e" does not exist
+LINE 1: ...(e.first_name,' ',replace(e.last_name,e.last_name,e.last_nam...
+                                                             ^
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,'Active')) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date=now();
+ concat
+--------
+(0 rows)
+
+
+employee_management_system=# select * from employees;
+ employee_id | first_name | last_name |           email           | hire_date  | salary  | department_id
+-------------+------------+-----------+---------------------------+------------+---------+---------------
+         101 | Alice      | Johnson   | alice.johnson@company.com | 2015-03-15 | 4500.00 |             1
+         102 | Bob        | Smith     | bob.smith@company.com     | 2018-06-23 | 5200.00 |             3
+         103 | Carol      | Adams     | carol.adams@company.com   | 2012-09-10 | 6700.00 |             2
+         104 | David      | Lee       | david.lee@company.com     | 2020-01-05 | 3800.00 |             4
+         105 | Eve        | Martins   | eve.martins@company.com   | 2019-12-11 | 4000.00 |             3
+         106 | Frank      | Green     | frank.green@company.com   | 2017-07-08 | 6000.00 |             8
+         107 | Grace      | Brown     | grace.brown@company.com   | 2014-11-02 | 4900.00 |             5
+         108 | Hank       | Wilson    | hank.wilson@company.com   | 2013-02-17 | 3100.00 |             6
+         109 | Ivy        | Clark     | ivy.clark@company.com     | 2021-08-30 | 2700.00 |             9
+         110 | Jake       | White     | jake.white@company.com    | 2022-05-19 | 3600.00 |             7
+(10 rows)
+
+
+employee_management_system=# select floor(salary) from employees;
+ floor
+-------
+  4500
+  5200
+  6700
+  3800
+  4000
+  6000
+  4900
+  3100
+  2700
+  3600
+(10 rows)
+
+
+employee_management_system=# select mod(salary,2) from employees;
+ mod
+------
+ 0.00
+ 0.00
+ 0.00
+ 0.00
+ 0.00
+ 0.00
+ 0.00
+ 0.00
+ 0.00
+ 0.00
+(10 rows)
+
+
+employee_management_system=# select * from projects;
+ project_id |       project_name        | start_date |  end_date
+------------+---------------------------+------------+------------
+        201 | HR Revamp                 | 2023-01-01 | 2023-12-31
+        202 | Finance Automation        | 2022-05-15 | 2023-04-30
+        203 | IT Infrastructure Upgrade | 2024-01-01 |
+        204 | Marketing Blitz 2025      | 2025-02-01 | 2025-06-30
+        205 | Legal Compliance          | 2023-07-10 | 2024-01-10
+        206 | Customer Portal           | 2021-11-01 | 2022-10-31
+        207 | Sales Booster             | 2022-04-01 | 2023-03-31
+        208 | R&D Pilot                 | 2025-01-01 |
+        209 | Procurement Tracker       | 2024-03-15 | 2024-11-15
+        210 | Operations Streamline     | 2022-09-01 | 2023-09-01
+(10 rows)
+
+
+employee_management_system=# select end_date-start_date from employees;
+ERROR:  column "end_date" does not exist
+LINE 1: select end_date-start_date from employees;
+               ^
+employee_management_system=# select end_date - start_date from employees;
+ERROR:  column "end_date" does not exist
+LINE 1: select end_date - start_date from employees;
+               ^
+employee_management_system=# select end_date - start_date from projects;
+ ?column?
+----------
+      364
+      350
+
+      149
+      184
+      364
+      364
+
+      245
+      365
+(10 rows)
+
+
+employee_management_system=# select abs(4500-5200) from employees;
+ abs
+-----
+ 700
+ 700
+ 700
+ 700
+ 700
+ 700
+ 700
+ 700
+ 700
+ 700
+(10 rows)
+
+
+employee_management_system=# select abs(4500-5200) from employees where employee_id=1;
+ abs
+-----
+(0 rows)
+
+
+employee_management_system=# select power(salary,10/100) from employees;
+       power
+--------------------
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+ 1.0000000000000000
+(10 rows)
+
+
+employee_management_system=# select power(salary,0.1) from employees;
+       power
+--------------------
+ 2.3191094809566129
+ 2.3528830134229611
+ 2.4132787028625915
+ 2.2802284483037342
+ 2.2919545389923279
+ 2.3867950310580739
+ 2.3389428374280203
+ 2.2342726504228756
+ 2.2036183309053404
+ 2.2679331552660544
+(10 rows)
+
+
+employee_management_system=# select power(4500,0.1) from employees where employee_id=1;
+ power
+-------
+(0 rows)
+
+
+employee_management_system=# select power(4500,0.1) from employees;
+       power
+--------------------
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+ 2.3191094809566129
+(10 rows)
+
+
+employee_management_system=# select rand(employee_id) from employees;
+ERROR:  function rand(integer) does not exist
+LINE 1: select rand(employee_id) from employees;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select rand() from employees;
+ERROR:  function rand() does not exist
+LINE 1: select rand() from employees;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select rand();
+ERROR:  function rand() does not exist
+LINE 1: select rand();
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select * from projects;
+ project_id |       project_name        | start_date |  end_date
+------------+---------------------------+------------+------------
+        201 | HR Revamp                 | 2023-01-01 | 2023-12-31
+        202 | Finance Automation        | 2022-05-15 | 2023-04-30
+        203 | IT Infrastructure Upgrade | 2024-01-01 |
+        204 | Marketing Blitz 2025      | 2025-02-01 | 2025-06-30
+        205 | Legal Compliance          | 2023-07-10 | 2024-01-10
+        206 | Customer Portal           | 2021-11-01 | 2022-10-31
+        207 | Sales Booster             | 2022-04-01 | 2023-03-31
+        208 | R&D Pilot                 | 2025-01-01 |
+        209 | Procurement Tracker       | 2024-03-15 | 2024-11-15
+        210 | Operations Streamline     | 2022-09-01 | 2023-09-01
+(10 rows)
+
+
+employee_management_system=# update projects set end_date='2025-07-27' where project_id=203;
+UPDATE 1
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,'Active')) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date=now();
+ concat
+--------
+(0 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,'Active')) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date>'2025-30-06';
+ERROR:  date/time field value out of range: "2025-30-06"
+LINE 1: ... p on p.project_id=ep.project_id where p.end_date>'2025-30-0...
+                                                             ^
+HINT:  Perhaps you need a different "datestyle" setting.
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,'Active')) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date>'2025-06-30';
+   concat
+------------
+ Bob Active
+ Eve Active
+(2 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,'Active')) from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date>'2025-07-26';
+   concat
+------------
+ Bob Active
+ Eve Active
+(2 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',replace(e.last_name,e.last_name,'Active')), p.end_date from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date>'2025-07-26';
+   concat   |  end_date
+------------+------------
+ Bob Active | 2025-07-27
+ Eve Active | 2025-07-27
+(2 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',e.last_name,'Active')), p.end_date from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date>'2025-07-26';
+ERROR:  syntax error at or near ")"
+LINE 1: ...lect concat(e.first_name,' ',e.last_name,'Active')), p.end_d...
+                                                             ^
+employee_management_system=# select concat(e.first_name,' ',e.last_name,'Active'), p.end_date from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date>'2025-07-26';
+      concat       |  end_date
+-------------------+------------
+ Bob SmithActive   | 2025-07-27
+ Eve MartinsActive | 2025-07-27
+(2 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',e.last_name,'Active'), p.end_date from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id where p.end_date=now();
+ concat | end_date
+--------+----------
+(0 rows)
+
+
+employee_management_system=# elect * from projects;
+ERROR:  syntax error at or near "elect"
+LINE 1: elect * from projects;
+        ^
+employee_management_system=# select * from projects;
+ project_id |       project_name        | start_date |  end_date
+------------+---------------------------+------------+------------
+        201 | HR Revamp                 | 2023-01-01 | 2023-12-31
+        202 | Finance Automation        | 2022-05-15 | 2023-04-30
+        204 | Marketing Blitz 2025      | 2025-02-01 | 2025-06-30
+        205 | Legal Compliance          | 2023-07-10 | 2024-01-10
+        206 | Customer Portal           | 2021-11-01 | 2022-10-31
+        207 | Sales Booster             | 2022-04-01 | 2023-03-31
+        208 | R&D Pilot                 | 2025-01-01 |
+        209 | Procurement Tracker       | 2024-03-15 | 2024-11-15
+        210 | Operations Streamline     | 2022-09-01 | 2023-09-01
+        203 | IT Infrastructure Upgrade | 2024-01-01 | 2025-07-27
+(10 rows)
+
+
+employee_management_system=# select * from employees e join employee_projects ep on e.employe_id=ep.employee_idjoin projects p on p.project_id=ep.project_id;
+ERROR:  syntax error at or near "projects"
+LINE 1: ...ee_projects ep on e.employe_id=ep.employee_idjoin projects p...
+                                                             ^
+employee_management_system=# select * from employees e join employee_projects ep on e.employe_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+ERROR:  column e.employe_id does not exist
+LINE 1: ...t * from employees e join employee_projects ep on e.employe_...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "e.employee_id".
+employee_management_system=# select * from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+ employee_id | first_name | last_name |           email           | hire_date  | salary  | department_id | employee_id | project_id | assigned_date | project_id |       project_name        | start_date |  end_date
+-------------+------------+-----------+---------------------------+------------+---------+---------------+-------------+------------+---------------+------------+---------------------------+------------+------------
+         101 | Alice      | Johnson   | alice.johnson@company.com | 2015-03-15 | 4500.00 |             1 |         101 |        201 | 2023-01-10    |        201 | HR Revamp                 | 2023-01-01 | 2023-12-31
+         102 | Bob        | Smith     | bob.smith@company.com     | 2018-06-23 | 5200.00 |             3 |         102 |        203 | 2024-01-05    |        203 | IT Infrastructure Upgrade | 2024-01-01 | 2025-07-27
+         103 | Carol      | Adams     | carol.adams@company.com   | 2012-09-10 | 6700.00 |             2 |         103 |        202 | 2022-05-20    |        202 | Finance Automation        | 2022-05-15 | 2023-04-30
+         104 | David      | Lee       | david.lee@company.com     | 2020-01-05 | 3800.00 |             4 |         104 |        204 | 2025-02-10    |        204 | Marketing Blitz 2025      | 2025-02-01 | 2025-06-30
+         105 | Eve        | Martins   | eve.martins@company.com   | 2019-12-11 | 4000.00 |             3 |         105 |        203 | 2024-01-07    |        203 | IT Infrastructure Upgrade | 2024-01-01 | 2025-07-27
+         106 | Frank      | Green     | frank.green@company.com   | 2017-07-08 | 6000.00 |             8 |         106 |        207 | 2022-04-15    |        207 | Sales Booster             | 2022-04-01 | 2023-03-31
+         107 | Grace      | Brown     | grace.brown@company.com   | 2014-11-02 | 4900.00 |             5 |         107 |        205 | 2023-07-15    |        205 | Legal Compliance          | 2023-07-10 | 2024-01-10
+         108 | Hank       | Wilson    | hank.wilson@company.com   | 2013-02-17 | 3100.00 |             6 |         108 |        210 | 2022-09-10    |        210 | Operations Streamline     | 2022-09-01 | 2023-09-01
+         109 | Ivy        | Clark     | ivy.clark@company.com     | 2021-08-30 | 2700.00 |             9 |         109 |        208 | 2025-01-10    |        208 | R&D Pilot                 | 2025-01-01 |
+         110 | Jake       | White     | jake.white@company.com    | 2022-05-19 | 3600.00 |             7 |         110 |        206 | 2021-11-05    |        206 | Customer Portal           | 2021-11-01 | 2022-10-31
+(10 rows)
+
+
+employee_management_system=# select ceil(salary) from employees;
+ ceil
+------
+ 4500
+ 5200
+ 6700
+ 3800
+ 4000
+ 6000
+ 4900
+ 3100
+ 2700
+ 3600
+(10 rows)
+
+
+employee_management_system=# select floor(salary) from employees;
+ floor
+-------
+  4500
+  5200
+  6700
+  3800
+  4000
+  6000
+  4900
+  3100
+  2700
+  3600
+(10 rows)
+
+
+employee_management_system=# select length(phone_number) from employees;
+ERROR:  column "phone_number" does not exist
+LINE 1: select length(phone_number) from employees;
+                      ^
+employee_management_system=# select case when salary>5000 then 'high' when salary between 3000 and 4900 then 'medium' else 'low' end as case salary from employees;
+ERROR:  syntax error at or near "salary"
+LINE 1: ...000 and 4900 then 'medium' else 'low' end as case salary fro...
+                                                             ^
+employee_management_system=# select case when salary>5000 then 'high' when salary between 3000 and 4900 then 'medium' else 'low' end as case_salary from employees;
+ case_salary
+-------------
+ medium
+ high
+ high
+ medium
+ medium
+ high
+ medium
+ medium
+ low
+ medium
+(10 rows)
+
+
+employee_management_system=# select length(salary) from employees;
+ERROR:  function length(numeric) does not exist
+LINE 1: select length(salary) from employees;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select now();
+              now
+-------------------------------
+ 2025-07-27 14:36:28.373737+01
+(1 row)
+
+
+employee_management_system=# select now()-hire_date from employees;
+         ?column?
+---------------------------
+ 3787 days 13:38:09.035002
+ 2591 days 14:38:09.035002
+ 4703 days 14:38:09.035002
+ 2030 days 13:38:09.035002
+ 2055 days 13:38:09.035002
+ 2941 days 14:38:09.035002
+ 3920 days 13:38:09.035002
+ 4543 days 13:38:09.035002
+ 1427 days 14:38:09.035002
+ 1165 days 14:38:09.035002
+(10 rows)
+
+
+employee_management_system=# select concat(first_name,' ',last_name) from employees where hire_date between '2025-01-01' and '2025-12-31';
+ concat
+--------
+(0 rows)
+
+
+employee_management_system=# select curdate();
+ERROR:  function curdate() does not exist
+LINE 1: select curdate();
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select current_date;
+ current_date
+--------------
+ 2025-07-27
+(1 row)
+employee_management_system=# select now();
+              now
+-------------------------------
+ 2025-07-29 12:22:47.435896+01
+(1 row)
+
+
+employee_management_system=# select * from employees;
+ employee_id | first_name | last_name |           email           | hire_date  | salary  | department_id
+-------------+------------+-----------+---------------------------+------------+---------+---------------
+         101 | Alice      | Johnson   | alice.johnson@company.com | 2015-03-15 | 4500.00 |             1
+         102 | Bob        | Smith     | bob.smith@company.com     | 2018-06-23 | 5200.00 |             3
+         103 | Carol      | Adams     | carol.adams@company.com   | 2012-09-10 | 6700.00 |             2
+         104 | David      | Lee       | david.lee@company.com     | 2020-01-05 | 3800.00 |             4
+         105 | Eve        | Martins   | eve.martins@company.com   | 2019-12-11 | 4000.00 |             3
+         106 | Frank      | Green     | frank.green@company.com   | 2017-07-08 | 6000.00 |             8
+         107 | Grace      | Brown     | grace.brown@company.com   | 2014-11-02 | 4900.00 |             5
+         108 | Hank       | Wilson    | hank.wilson@company.com   | 2013-02-17 | 3100.00 |             6
+         109 | Ivy        | Clark     | ivy.clark@company.com     | 2021-08-30 | 2700.00 |             9
+         110 | Jake       | White     | jake.white@company.com    | 2022-05-19 | 3600.00 |             7
+(10 rows)
+
+
+employee_management_system=# select substring(hire_date,1,4) as year,substring(hire_date,5,2) as month, substring(hire_date,7,2) as day from employees;
+ERROR:  function substring(date, integer, integer) does not exist
+LINE 1: select substring(hire_date,1,4) as year,substring(hire_date,...
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+employee_management_system=# select concat(first_name,' ',last_name) from employee where hire_date<'2020-01-01';
+ERROR:  relation "employee" does not exist
+LINE 1: select concat(first_name,' ',last_name) from employee where ...
+                                                     ^
+employee_management_system=# select concat(first_name,' ',last_name) from employees where hire_date<'2020-01-01';
+    concat
+---------------
+ Alice Johnson
+ Bob Smith
+ Carol Adams
+ Eve Martins
+ Frank Green
+ Grace Brown
+ Hank Wilson
+(7 rows)
+
+
+employee_management_system=# select * from projects;
+ project_id |       project_name        | start_date |  end_date
+------------+---------------------------+------------+------------
+        201 | HR Revamp                 | 2023-01-01 | 2023-12-31
+        202 | Finance Automation        | 2022-05-15 | 2023-04-30
+        204 | Marketing Blitz 2025      | 2025-02-01 | 2025-06-30
+        205 | Legal Compliance          | 2023-07-10 | 2024-01-10
+        206 | Customer Portal           | 2021-11-01 | 2022-10-31
+        207 | Sales Booster             | 2022-04-01 | 2023-03-31
+        208 | R&D Pilot                 | 2025-01-01 |
+        209 | Procurement Tracker       | 2024-03-15 | 2024-11-15
+        210 | Operations Streamline     | 2022-09-01 | 2023-09-01
+        203 | IT Infrastructure Upgrade | 2024-01-01 | 2025-07-27
+(10 rows)
+
+
+employee_management_system=# select project_id, project_name from projects where end_date between '2025-06-30' and '2025-07-29';
+ project_id |       project_name
+------------+---------------------------
+        204 | Marketing Blitz 2025
+        203 | IT Infrastructure Upgrade
+(2 rows)
+
+
+employee_management_system=# select end_date-start_date as total_days from projects;
+ total_days
+------------
+        364
+        350
+        149
+        184
+        364
+        364
+
+        245
+        365
+        573
+(10 rows)
+
+
+employee_management_system=# select case when end_date is null then 'Ongoing';
+ERROR:  syntax error at or near ";"
+LINE 1: select case when end_date is null then 'Ongoing';
+                                                        ^
+employee_management_system=# select case when end_date is null then 'Ongoing' end from projects;
+  case
+---------
+
+
+
+
+
+
+ Ongoing
+
+
+
+(10 rows)
+
+
+employee_management_system=# select * from employees;
+ employee_id | first_name | last_name |           email           | hire_date  | salary  | department_id
+-------------+------------+-----------+---------------------------+------------+---------+---------------
+         101 | Alice      | Johnson   | alice.johnson@company.com | 2015-03-15 | 4500.00 |             1
+         102 | Bob        | Smith     | bob.smith@company.com     | 2018-06-23 | 5200.00 |             3
+         103 | Carol      | Adams     | carol.adams@company.com   | 2012-09-10 | 6700.00 |             2
+         104 | David      | Lee       | david.lee@company.com     | 2020-01-05 | 3800.00 |             4
+         105 | Eve        | Martins   | eve.martins@company.com   | 2019-12-11 | 4000.00 |             3
+         106 | Frank      | Green     | frank.green@company.com   | 2017-07-08 | 6000.00 |             8
+         107 | Grace      | Brown     | grace.brown@company.com   | 2014-11-02 | 4900.00 |             5
+         108 | Hank       | Wilson    | hank.wilson@company.com   | 2013-02-17 | 3100.00 |             6
+         109 | Ivy        | Clark     | ivy.clark@company.com     | 2021-08-30 | 2700.00 |             9
+         110 | Jake       | White     | jake.white@company.com    | 2022-05-19 | 3600.00 |             7
+(10 rows)
+
+
+employee_management_system=# select case when salary>5000 then 'high' when salary between 4000 and 4999 then 'medium' else 'low' end from employees;
+  case
+--------
+ medium
+ high
+ high
+ low
+ medium
+ high
+ medium
+ low
+ low
+ low
+(10 rows)
+
+
+employee_management_system=# select coalesce(email,'no email') from employees;
+         coalesce
+---------------------------
+ alice.johnson@company.com
+ bob.smith@company.com
+ carol.adams@company.com
+ david.lee@company.com
+ eve.martins@company.com
+ frank.green@company.com
+ grace.brown@company.com
+ hank.wilson@company.com
+ ivy.clark@company.com
+ jake.white@company.com
+(10 rows)
+
+
+employee_management_system=# select case when hire_date<'2025-01-01' then 'Veteran' end from employees;
+  case
+---------
+ Veteran
+ Veteran
+ Veteran
+ Veteran
+ Veteran
+ Veteran
+ Veteran
+ Veteran
+ Veteran
+ Veteran
+(10 rows)
+
+
+employee_management_system=# select coalesce(salary,null,3000) from employees;
+ coalesce
+----------
+  4500.00
+  5200.00
+  6700.00
+  3800.00
+  4000.00
+  6000.00
+  4900.00
+  3100.00
+  2700.00
+  3600.00
+(10 rows)
+
+
+employee_management_system=# select * from departments;
+ department_id |     department_name
+---------------+--------------------------
+             1 | Human Resources
+             2 | Finance
+             3 | Information Technology
+             4 | Marketing
+             5 | Legal
+             6 | Operations
+             7 | Customer Service
+             8 | Sales
+             9 | Research and Development
+            10 | Procurement
+(10 rows)
+
+
+employee_management_system=# select department_id,department_name, case when department_name like 'Information Technology' then 'IT' WHEN department_name like 'Human Resources' then 'HR' else 'Other' end from employees;
+ERROR:  column "department_name" does not exist
+LINE 1: select department_id,department_name, case when department_n...
+                             ^
+employee_management_system=# select department_id,department_name, case when department_name like 'Information Technology' then 'IT' WHEN department_name like 'Human Resources' then 'HR' else 'Other' end from departments;
+ department_id |     department_name      | case
+---------------+--------------------------+-------
+             1 | Human Resources          | HR
+             2 | Finance                  | Other
+             3 | Information Technology   | IT
+             4 | Marketing                | Other
+             5 | Legal                    | Other
+             6 | Operations               | Other
+             7 | Customer Service         | Other
+             8 | Sales                    | Other
+             9 | Research and Development | Other
+            10 | Procurement              | Other
+(10 rows)
+
+
+employee_management_system=# select concat(e.first_name,' ',e.last_name),case when p.project_name is null then 'Unassigned' end from employees e join employee_projects ep on e.employee_id=ep.employee_id join projects p on p.project_id=ep.project_id;
+    concat     | case
+---------------+------
+ Alice Johnson |
+ Bob Smith     |
+ Carol Adams   |
+ David Lee     |
+ Eve Martins   |
+ Frank Green   |
+ Grace Brown   |
+ Hank Wilson   |
+ Ivy Clark     |
+ Jake White    |
+(10 rows)
+
+
+employee_management_system=# select case when salary>5000 then '15% TAX' when salary between 4000 and 4999 then '10% TAX' else '5% TAX' end as Tax from employees;
+   tax
+---------
+ 10% TAX
+ 15% TAX
+ 15% TAX
+ 5% TAX
+ 10% TAX
+ 15% TAX
+ 10% TAX
+ 5% TAX
+ 5% TAX
+ 5% TAX
+(10 rows)
+
+
+employee_management_system=# select concat(first_name,' ',last_name),salary, case when salary>5000 then '15% TAX' when salary between 4000 and 4999 then '10% TAX' else '5% TAX' end as Tax from employees;
+    concat     | salary  |   tax
+---------------+---------+---------
+ Alice Johnson | 4500.00 | 10% TAX
+ Bob Smith     | 5200.00 | 15% TAX
+ Carol Adams   | 6700.00 | 15% TAX
+ David Lee     | 3800.00 | 5% TAX
+ Eve Martins   | 4000.00 | 10% TAX
+ Frank Green   | 6000.00 | 15% TAX
+ Grace Brown   | 4900.00 | 10% TAX
+ Hank Wilson   | 3100.00 | 5% TAX
+ Ivy Clark     | 2700.00 | 5% TAX
+ Jake White    | 3600.00 | 5% TAX
+(10 rows)
+
+
+employee_management_system=# select concat(first_name,' ',last_name) as full_name,salary, case when salary>5000 then '15% TAX' when salary between 4000 and 4999 then '10% TAX' else '5% TAX' end as Tax from employees;
+   full_name   | salary  |   tax
+---------------+---------+---------
+ Alice Johnson | 4500.00 | 10% TAX
+ Bob Smith     | 5200.00 | 15% TAX
+ Carol Adams   | 6700.00 | 15% TAX
+ David Lee     | 3800.00 | 5% TAX
+ Eve Martins   | 4000.00 | 10% TAX
+ Frank Green   | 6000.00 | 15% TAX
+ Grace Brown   | 4900.00 | 10% TAX
+ Hank Wilson   | 3100.00 | 5% TAX
+ Ivy Clark     | 2700.00 | 5% TAX
+ Jake White    | 3600.00 | 5% TAX
+(10 rows)
+
+
+employee_management_system=# select salary,case when mod(salary,2) then 'even salary' else 'even salary' end from employees;
+ERROR:  argument of CASE/WHEN must be type boolean, not type numeric
+LINE 1: select salary,case when mod(salary,2) then 'even salary' els...
+                                ^
+employee_management_system=# select salary,case when mod(salary,2)=0 then 'even salary' else 'even salary' end from employees;
+ salary  |    case
+---------+-------------
+ 4500.00 | even salary
+ 5200.00 | even salary
+ 6700.00 | even salary
+ 3800.00 | even salary
+ 4000.00 | even salary
+ 6000.00 | even salary
+ 4900.00 | even salary
+ 3100.00 | even salary
+ 2700.00 | even salary
+ 3600.00 | even salary
+(10 rows)
+
+
+employee_management_system=# select concat(first_name,' ',last_name), case when length(concat(first_name,' ',last_name)).10 then 'Long Name' end from employees;
+ERROR:  syntax error at or near ".10"
+LINE 1: ...case when length(concat(first_name,' ',last_name)).10 then '...
+                                                             ^
+employee_management_system=# select concat(first_name,' ',last_name), case when length(concat(first_name,' ',last_name))>10 then 'Long Name' end from employees;
+    concat     |   case
+---------------+-----------
+ Alice Johnson | Long Name
+ Bob Smith     |
+ Carol Adams   | Long Name
+ David Lee     |
+ Eve Martins   | Long Name
+ Frank Green   | Long Name
+ Grace Brown   | Long Name
+ Hank Wilson   | Long Name
+ Ivy Clark     |
+ Jake White    |
+(10 rows)
